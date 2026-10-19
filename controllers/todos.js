@@ -18,6 +18,46 @@ class todoController{
     getTodos(req, res) {
         res.json({tasks: this.todos})
     }
+
+    updateTodo(req, res) {
+        const todoId = req.params.id;
+        const updatedTask = req.body.task;
+
+        console.log(req.body)
+        console.log(req.params)
+
+        const todoIndex = this.todos.findIndex(todo => todo.id === todoId);
+
+        if(todoIndex < 0) {
+            res.json({
+                message: 'Could not find todo with such index'
+            })
+            throw new Error('Could not find todo')
+        }
+        
+        this.todos[todoIndex] = new Todo(this.todos[todoIndex].id, updatedTask);
+        res.json({
+            message: 'Todo updated successfully',
+            updatedTask: this.todos[todoIndex]
+        })
+    } 
+
+    deleteTodo(req, res) {
+        const todoId = req.params.id;
+        const todoIndex = this.todos.findIndex(todo => todo.id === todoId);
+
+        if(todoIndex < 0) {
+            res.json({
+                message: 'Could not find todo with such index'
+            })
+            throw new Error('Could not find todo')
+        }
+
+        this.todos.splice(todoIndex, 1);
+        res.json({
+            message: 'Todo deleted successfully'
+        })
+    }
 }
 
 export const TodoController = new todoController()
